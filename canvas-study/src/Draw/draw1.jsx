@@ -1,20 +1,27 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Draw = () => {
-  const [context, setContext] = useState(null);
+  const [ctx, setCtx] = useState(null);
   useEffect(() => {
     const canvas = document.querySelector(".canvas");
-    setContext(canvas.getContext("2d"));
+    setCtx(canvas.getContext("2d"));
   }, []);
 
   useEffect(() => {
-    if (context) {
+    if (ctx) {
       draw();
     }
-  }, [context]);
+  }, [ctx]);
 
-  const draw = () => {};
+  const draw = () => {
+    ctx.fillRect(50, 50, 100, 100);
+    ctx.fillStyle = "red";
+    ctx.fillRect(0, 0, 100, 100);
+    ctx.clearRect(80, 80, 50, 50);
+    ctx.strokeRect(150, 150, 100, 100);
+  };
 
   return (
     <Container>
