@@ -8,27 +8,18 @@ const CircleAnimation = () => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    const boxes = [];
 
-    class Box {
-      constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.draw();
+    ctx.fillRect(250, 150, 100, 100);
+
+    const clickHandler = (e) => {
+      const x = e.offsetX;
+      const y = e.offsetY;
+      if (x < 350 && x > 250 && y < 250 && y > 150) {
+        console.log("박스 선택함");
       }
+    };
 
-      draw() {
-        ctx.fillStyle = "rgba(0,0,0,0.5)";
-        ctx.fillRect(this.x, this.y, 100, 100);
-      }
-    }
-
-    let tempX, tempY;
-    for (let index = 0; index < 10; index++) {
-      tempX = Math.random() * canvas.width * 0.8;
-      tempY = Math.random() * canvas.height * 0.8;
-      boxes.push(new Box(tempX, tempY));
-    }
+    canvas.addEventListener("click", clickHandler);
   }, []);
   return (
     <Container>
