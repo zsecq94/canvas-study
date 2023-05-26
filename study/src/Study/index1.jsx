@@ -20,6 +20,7 @@ const CircleAnimation = () => {
     class Panel {
       constructor() {
         this.scale = 0;
+        this.angle = 0;
       }
 
       draw() {
@@ -28,6 +29,7 @@ const CircleAnimation = () => {
         ctx.resetTransform();
         ctx.translate(oX, oY);
         ctx.scale(this.scale, this.scale);
+        ctx.rotate((this.angle * Math.PI) / 180);
         ctx.translate(-oX, -oY);
         ctx.fillRect(oX - 150, oY - 150, 300, 300);
         ctx.resetTransform();
@@ -83,14 +85,35 @@ const CircleAnimation = () => {
         }
         box.draw();
       });
+
       switch (step) {
         case 1:
-          panel.scale = 0;
           break;
 
         case 2:
-          panel.scale += 0.02;
+          // 현재크기 = 현재크기 + (목표크기 - 현재크기) * 0.06
+          panel.scale = panel.scale + (1 - panel.scale) * 0.06;
+          // 각도 = 스케일(0~1) * 720
+          panel.angle = panel.scale * 360;
           panel.draw();
+          if (panel.scale > 0.9994) {
+            step = 3;
+            panel.scale = 1;
+            panel.angle = 360;
+          }
+          break;
+        case 3:
+          panel.draw();
+          panel.showContent();
+          break;
+        case 4:
+          panel.scale -= 0.05;
+          panel.angle = panel.scale * 180;
+          panel.draw();
+          if (panel.scale < 0) {
+            step = 1;
+            panel.scale = 0;
+          }
           break;
       }
 
@@ -145,7 +168,6 @@ const CircleAnimation = () => {
         }
       }
       if (selectedBox) {
-        console.log(selectedBox);
         step = 2;
       }
     });
@@ -153,7 +175,7 @@ const CircleAnimation = () => {
     canvas.addEventListener("mouseup", (e) => {
       if (selectedBox) {
         selectedBox = null;
-        step = 1;
+        step = 4;
       }
     });
     init();
